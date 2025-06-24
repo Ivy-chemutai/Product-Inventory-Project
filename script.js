@@ -14,7 +14,15 @@ document.addEventListener("DOMContentLoaded", () => {
 function fetchProducts() {
   fetch(BASE_URL)
     .then(response => response.json())
-    .then(products => renderProducts(products));
+    .then(products => {
+      if (Array.isArray(products)) {
+        renderProducts(products);
+      } else {
+        console.error("Fetched data is not an array:", products);
+        renderProducts([]);
+      }
+    })
+    .catch(error => console.error("error fetching products:", error));
 }
 
 function renderProducts(products) {
