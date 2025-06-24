@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Inventory</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>📦 Product Inventory Manager</h1>
+
+  <!-- Add Product Form -->
+  <form id="addProductForm">
+    <input type="text" id="productName" placeholder="Product Name" required />
+    <input type="text" id="productDescription" placeholder="Description (optional)" />
+    <input type="number" id="productPrice" placeholder="Price" step="0.01" required />
+    <input type="text" id="productImage" placeholder="Image URL" />
+    <button type="submit">Add Product</button>
+  </form>
+
+  <!-- Search -->
+  <input type="text" id="searchInput" placeholder="Search products..." />
+
+  <!-- Sort Buttons -->
+  <div style="text-align:center; margin: 20px 0;">
+    <button class="sort-btn" id="sortByName">Sort by Name</button>
+    <button class="sort-btn" id="sortByPrice">Sort by Price</button>
+  </div>
+
+  <!-- Product List -->
+  <ul id="productList"></ul>
+
+  <script src="script.js"></script>
+</body>
+</html>
