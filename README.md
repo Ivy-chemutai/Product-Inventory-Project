@@ -1,7 +1,7 @@
 # Product Inventory Manager
 
 ## Description
-This project allows users to easily track and manage a list of products. Users can add new items with detailed information, edit existing entries, delete products, and quickly search through the inventory. The UI updates dynamically, providing a smooth user experience, and all data changes persist via the mock API.
+This project enables users to track and manage a list of products easily. Users can add new items with detailed information, edit existing entries, delete products, and quickly search through the inventory. The UI updates dynamically, providing a smooth user experience, and all data changes persist via the mock API.
 ---
 
 ## Overview
@@ -20,7 +20,7 @@ Follow these steps to run the project locally.
 
 ### Prerequisites
 - Node.js and npm installed
-- Basic knowledge of command line
+- Basic knowledge of the command line
 
 ### Installation
 1. **Clone the repository**
@@ -40,7 +40,7 @@ Follow these steps to run the project locally.
    - Open `index.html` in your browser
    - Or use a simple HTTP server:  
      ```bash
-     npx http-server .
+     npx http-server.
      ```
 
 ## Usage
@@ -58,6 +58,18 @@ Follow these steps to run the project locally.
 -db.json            # Sample data for json-server
 - README.md          # Project documentation
 ```
+## Features
+Full CRUD functionality (Create, Read, Update, Delete)
+
+Real-time search and sorting
+
+Likes and star-based rating display
+
+Responsive layout with a mobile-friendly navbar
+
+Clean and modern design with a styled landing page
+
+
 
 ## Technologies
 - **HTML5** & **CSS3**
@@ -71,8 +83,18 @@ Follow these steps to run the project locally.
 
 ---
 
+---
+
+### Step 4: Save and Push to GitHub
+
+Open your terminal and run:
+-git add README.md
+-git commit -m "Add full README with setup instructions and project info"
+-git push
+
+
 ## Author
 Lavi
 
  Happy coding!  
-MIT License © 2025
+MIT License © 2025 Ivy Chemutai. All rights reserved.
