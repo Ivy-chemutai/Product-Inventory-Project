@@ -1,7 +1,5 @@
-// script.js
 const BASE_URL = "http://localhost:3000/products";
 
-// DOM Elements
 const productList = document.getElementById("productList");
 const addForm = document.getElementById("addProductForm");
 const searchInput = document.getElementById("searchInput");
@@ -13,16 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function fetchProducts() {
   fetch(BASE_URL)
-    .then(response => response.json())
-    .then(products => {
-      if (Array.isArray(products)) {
-        renderProducts(products);
-      } else {
-        console.error("Fetched data is not an array:", products);
-        renderProducts([]);
-      }
-    })
-    .catch(error => console.error("error fetching products:", error));
+    .then(res => res.json())
+    .then(products => renderProducts(products))
+    .catch(err => console.error("Failed to fetch:", err));
 }
 
 function renderProducts(products) {
@@ -36,8 +27,8 @@ function renderProducts(products) {
         <h2>${product.name}</h2>
         <p>${product.description || "No description"}</p>
         <p>Price: $${product.price}</p>
-        <p>Rating: ${"⭐".repeat(product.review)} 5/5</p>
-        <p>Likes: ${product.likes ?? 2.5} </p>
+        <p>Rating: ${"⭐".repeat(product.review || 5)} 5/5</p>
+        <p>Likes: ${product.likes ?? 2.5}</p>
         <div class="action-buttons">
           <button class="like-btn" data-id="${product.id}">Like</button>
           <button class="edit-btn" data-id="${product.id}">Edit</button>
@@ -47,8 +38,6 @@ function renderProducts(products) {
     `;
     productList.appendChild(li);
 
-    li.querySelector(".delete-btn").addEventListener("click", () => deleteProduct(product.id));
-    li.querySelector(".edit-btn").addEventListener("click", () => editProduct(product));
     li.querySelector(".like-btn").addEventListener("click", () => {
       const newLikes = product.likes + 1;
       fetch(`${BASE_URL}/${product.id}`, {
@@ -57,78 +46,61 @@ function renderProducts(products) {
         body: JSON.stringify({ likes: newLikes })
       }).then(() => fetchProducts());
     });
+
+    li.querySelector(".edit-btn").addEventListener("click", () => editProduct(product));
+    li.querySelector(".delete-btn").addEventListener("click", () => {
+      fetch(`${BASE_URL}/${product.id}`, { method: "DELETE" })
+        .then(() => fetchProducts());
+    });
   });
 }
-
-function deleteProduct(id) {
-  fetch(`${BASE_URL}/${id}`, { method: "DELETE" })
-    .then(() => fetchProducts());
-}
-
 function editProduct(product) {
-  const nameField = document.getElementById("productName");
-  const descField = document.getElementById("productDescription");
-  const priceField = document.getElementById("productPrice");
-  const imageField = document.getElementById("productImage");
-
-  nameField.value = product.name;
-  descField.value = product.description || "";
-  priceField.value = product.price || "";
-  imageField.value = product.image || "";
+  document.getElementById("productName").value = product.name;
+  document.getElementById("productDescription").value = product.description || "";
+  document.getElementById("productPrice").value = product.price || "";
+  document.getElementById("productImage").value = product.image || "";
 
   addForm.onsubmit = function (event) {
     event.preventDefault();
-
     const updatedProduct = {
-      name: nameField.value,
-      description: descField.value,
-      price: parseFloat(priceField.value),
-      image: imageField.value,
+      name: productName.value,
+      description: productDescription.value,
+      price: parseFloat(productPrice.value),
+      image: productImage.value,
       likes: product.likes,
       review: product.review
     };
-
     fetch(`${BASE_URL}/${product.id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedProduct)
-    })
-      .then(() => {
-        fetchProducts();
-        addForm.reset();
-        addForm.onsubmit = defaultSubmitHandler;
-      });
+    }).then(() => {
+      fetchProducts();
+      addForm.reset();
+      addForm.onsubmit = defaultSubmitHandler;
+    });
   };
 }
 
 function defaultSubmitHandler(event) {
   event.preventDefault();
-
   const newProduct = {
-    name: document.getElementById("productName").value,
-    description: document.getElementById("productDescription").value,
-    price: parseFloat(document.getElementById("productPrice").value),
-    image: document.getElementById("productImage").value,
+    name: productName.value,
+    description: productDescription.value,
+    price: parseFloat(productPrice.value),
+    image: productImage.value,
     likes: 0,
     review: 5
   };
-
   fetch(BASE_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newProduct)
-  })
-    .then(res => res.json())
-    .then(() => {
-      fetchProducts();
-      addForm.reset();
-    });
+  }).then(() => {
+    fetchProducts();
+    addForm.reset();
+  });
 }
-
 addForm.onsubmit = defaultSubmitHandler;
 
 searchInput.addEventListener("input", e => {
@@ -140,3 +112,12 @@ searchInput.addEventListener("input", e => {
       renderProducts(filtered);
     });
 });
+
+// Toggle Navbar on Mobile
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.querySelector(".nav-links");
+menuToggle.addEventListener("click", () => {
+  navLinks.classList.toggle("show");
+});
+
+
