@@ -4,7 +4,7 @@ const productList = document.getElementById("productList");
 const addForm = document.getElementById("addProductForm");
 const searchInput = document.getElementById("searchInput");
 
-// Load all products
+
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
 });
@@ -27,7 +27,7 @@ function renderProducts(products) {
         <h2>${product.name}</h2>
         <p>${product.description || "No description"}</p>
         <p>Price: $${product.price}</p>
-        <p>Rating: ${"⭐".repeat(product.review || 5)} 5/5</p>
+        <p>Rating: ${.repeat(product.review || 5)} 5/5</p>
         <p>Likes: ${product.likes ?? 2.5}</p>
         <div class="action-buttons">
           <button class="like-btn" data-id="${product.id}">Like</button>
@@ -113,7 +113,7 @@ searchInput.addEventListener("input", e => {
     });
 });
 
-// Toggle Navbar on Mobile
+
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.querySelector(".nav-links");
 menuToggle.addEventListener("click", () => {
