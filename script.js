@@ -16,6 +16,11 @@ function fetchProducts() {
     .catch(err => console.error("Failed to fetch:", err));
 }
 
+function repeat(n) {
+  // Returns a string of n filled stars (★) for rating
+  return "★".repeat(Math.round(n));
+}
+
 function renderProducts(products) {
   productList.innerHTML = "";
   products.forEach(product => {
@@ -27,7 +32,7 @@ function renderProducts(products) {
         <h2>${product.name}</h2>
         <p>${product.description || "No description"}</p>
         <p>Price: $${product.price}</p>
-        <p>Rating: ${.repeat(product.review || 5)} 5/5</p>
+        <p>Rating: ${ repeat(product.review || 5)} 5/5</p>
         <p>Likes: ${product.likes ?? 2.5}</p>
         <div class="action-buttons">
           <button class="like-btn" data-id="${product.id}">Like</button>
