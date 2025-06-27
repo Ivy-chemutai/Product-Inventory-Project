@@ -7,13 +7,35 @@ const searchInput = document.getElementById("searchInput");
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
+  initNavigation();
 });
+
+function initNavigation() {
+  // Smooth scrolling for navigation links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+      // Close mobile menu after clicking
+      const navLinks = document.querySelector('.nav-links');
+      if (navLinks.classList.contains('show')) {
+        navLinks.classList.remove('show');
+      }
+    });
+  });
+}
 
 function fetchProducts() {
   fetch(BASE_URL)
     .then(res => res.json())
     .then(products => renderProducts(products))
-    .catch(err => console.error("Failed to fetch:", err));
+    .catch(error => console.error('Error fetching products:', error));
 }
 
 function repeat(n) {
@@ -32,8 +54,8 @@ function renderProducts(products) {
         <h2>${product.name}</h2>
         <p>${product.description || "No description"}</p>
         <p>Price: $${product.price}</p>
-        <p>Rating: ${ repeat(product.review || 5)} 5/5</p>
-        <p>Likes: ${product.likes ?? 2.5}</p>
+        <p>Rating: ${ repeat(product.review || 5)} (${product.review || 5}/5)</p>
+        <p>Likes: ${product.likes ?? 0}</p>
         <div class="action-buttons">
           <button class="like-btn" data-id="${product.id}">Like</button>
           <button class="edit-btn" data-id="${product.id}">Edit</button>
@@ -44,34 +66,41 @@ function renderProducts(products) {
     productList.appendChild(li);
 
     li.querySelector(".like-btn").addEventListener("click", () => {
-      const newLikes = product.likes + 1;
+      const newLikes = (product.likes || 0) + 1;
       fetch(`${BASE_URL}/${product.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ likes: newLikes })
-      }).then(() => fetchProducts());
+      }).then(() => fetchProducts())
+        .catch(error => console.error('Error updating likes:', error));
     });
 
     li.querySelector(".edit-btn").addEventListener("click", () => editProduct(product));
     li.querySelector(".delete-btn").addEventListener("click", () => {
       fetch(`${BASE_URL}/${product.id}`, { method: "DELETE" })
-        .then(() => fetchProducts());
+        .then(() => fetchProducts())
+        .catch(error => console.error('Error deleting product:', error));
     });
   });
 }
 function editProduct(product) {
-  document.getElementById("productName").value = product.name;
-  document.getElementById("productDescription").value = product.description || "";
-  document.getElementById("productPrice").value = product.price || "";
-  document.getElementById("productImage").value = product.image || "";
+  const nameField = document.getElementById("productName");
+  const descField = document.getElementById("productDescription");
+  const priceField = document.getElementById("productPrice");
+  const imageField = document.getElementById("productImage");
+
+  nameField.value = product.name;
+  descField.value = product.description || "";
+  priceField.value = product.price || "";
+  imageField.value = product.image || "";
 
   addForm.onsubmit = function (event) {
     event.preventDefault();
     const updatedProduct = {
-      name: productName.value,
-      description: productDescription.value,
-      price: parseFloat(productPrice.value),
-      image: productImage.value,
+      name: nameField.value,
+      description: descField.value,
+      price: parseFloat(priceField.value),
+      image: imageField.value,
       likes: product.likes,
       review: product.review
     };
@@ -83,17 +112,18 @@ function editProduct(product) {
       fetchProducts();
       addForm.reset();
       addForm.onsubmit = defaultSubmitHandler;
-    });
+    })
+    .catch(error => console.error('Error updating product:', error));
   };
 }
 
 function defaultSubmitHandler(event) {
   event.preventDefault();
   const newProduct = {
-    name: productName.value,
-    description: productDescription.value,
-    price: parseFloat(productPrice.value),
-    image: productImage.value,
+    name: document.getElementById("productName").value,
+    description: document.getElementById("productDescription").value,
+    price: parseFloat(document.getElementById("productPrice").value),
+    image: document.getElementById("productImage").value,
     likes: 0,
     review: 5
   };
@@ -104,25 +134,60 @@ function defaultSubmitHandler(event) {
   }).then(() => {
     fetchProducts();
     addForm.reset();
-  });
+  })
+  .catch(error => console.error('Error adding product:', error));
 }
 addForm.onsubmit = defaultSubmitHandler;
 
 searchInput.addEventListener("input", e => {
   const term = e.target.value.toLowerCase();
+  if (!term) {
+    fetchProducts();
+    return;
+  }
   fetch(BASE_URL)
     .then(res => res.json())
     .then(products => {
-      const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+      const filtered = products.filter(p => 
+        p.name.toLowerCase().includes(term) || 
+        (p.description && p.description.toLowerCase().includes(term))
+      );
       renderProducts(filtered);
-    });
+    })
+    .catch(error => console.error('Error searching products:', error));
 });
 
 
+// Mobile menu toggle
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.querySelector(".nav-links");
-menuToggle.addEventListener("click", () => {
-  navLinks.classList.toggle("show");
+if (menuToggle) {
+  menuToggle.addEventListener("click", () => {
+    navLinks.classList.toggle("show");
+  });
+}
+
+// Active navigation highlighting
+window.addEventListener('scroll', () => {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinksAll = document.querySelectorAll('.nav-links a');
+  
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 100;
+    if (scrollY >= sectionTop) {
+      current = section.getAttribute('id');
+    }
+  });
+  
+  navLinksAll.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${current}`) {
+      link.classList.add('active');
+    }
+  });
 });
+
+
 
 
