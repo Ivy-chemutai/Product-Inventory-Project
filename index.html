@@ -7,10 +7,13 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  
   <nav class="navbar">
     <div class="logo">Product Electronic Inventory</div>
     <ul class="nav-links">
       <li><a href="#landing">Home</a></li>
+      <li><a href="#about">About</a></li>
       <li><a href="#products">Products</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -30,10 +33,31 @@
     </div>
   </div>
 </section>
+ <section id="about" class="about">
+    <div class="about-content">
+      <h2>About Our Inventory System</h2>
+      <p>Our electronic product inventory management system helps you efficiently track, manage, and organize your electronic products. With features like real-time search, easy product addition, and intuitive management tools, we make inventory management simple and effective.</p>
+      <div class="features">
+        <div class="feature">
+          <h3>Easy Management</h3>
+          <p>Add, edit, and delete products with just a few clicks</p>
+        </div>
+        <div class="feature">
+          <h3>Real-time Search</h3>
+          <p>Find products instantly with our powerful search feature</p>
+        </div>
+        <div class="feature">
+          <h3>User Friendly</h3>
+          <p>Clean, intuitive interface designed for efficiency</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  
+  <!-- Products Section -->
   <section id="products">
-    <h1> Product Inventory Manager</h1>
+    <h1>Product Inventory Manager</h1>
+
     <form id="addProductForm">
       <input type="text" id="productName" placeholder="Product Name" required />
       <input type="text" id="productDescription" placeholder="Description (optional)" />
@@ -43,11 +67,15 @@
     </form>
 
     <input type="text" id="searchInput" placeholder="Search products" />
+
+    
+
     <ul id="productList"></ul>
   </section>
+
   <section class="contact-form" id="contact">
-    <h2> Contact Me</h2>
-    <p>If you'd like to purchase a product, reach out below:</p>
+    <h2>Contact Us</h2>
+    <p>Have questions about our inventory system or need support? Get in touch:</p>
     <form action="mailto:yourname@example.com" method="POST" enctype="text/plain">
       <input type="text" name="name" placeholder="Your Name" required />
       <input type="email" name="email" placeholder="Your Email" required />
@@ -57,7 +85,6 @@
     
   </section>
 
-  <!-- Footer -->
   <footer class="footer">
   <div class="footer-container">
     <div class="footer-section">
@@ -89,7 +116,7 @@
   </div>
 
   <div class="footer-bottom">
-    <p>© 2025 Your Project Name. All rights reserved.</p>
+    <p>© 2025 Product Electronic Inventory. All rights reserved.</p>
   </div>
 </footer>
 
